@@ -1,9 +1,9 @@
-import { Router } from "express";
+const { Router } = require("express");
 
 const router = Router();
 
-import WebhookController from "../controllers/amo/webhook.controller";
+const WebhookController = require("../controllers/amo/webhook.controller.js");
 
 router.post("/webhook", WebhookController);
 
-export default router;
+module.exports = router;

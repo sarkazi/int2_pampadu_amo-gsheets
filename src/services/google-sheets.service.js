@@ -1,7 +1,6 @@
-import jwt from "jsonwebtoken";
-import axios from "axios";
-import googleInstance from "../api/google-sheet.instance";
-import { IGetSheetResponse, IGoogleAuthorizeResponse } from "./types";
+const axios = require("axios");
+const axios = require("jsonwebtoken");
+const googleInstance = require("../api/google-sheet.instance.js");
 
 const getSheetData = async (accessToken) => {
   const { data } = await googleInstance.get(
@@ -71,4 +70,8 @@ const getGoogleAccessToken = async () => {
   return authorizeResponse.access_token;
 };
 
-export default { getSheetData, updateSheetData, getGoogleAccessToken };
+module.exports = {
+  getSheetData,
+  updateSheetData,
+  getGoogleAccessToken,
+};

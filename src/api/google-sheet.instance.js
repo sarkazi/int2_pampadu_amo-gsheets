@@ -1,4 +1,4 @@
-import axios from "axios";
+const axios = require("axios");
 
 const googleSheetsApiInstance = axios.create({
   baseURL: "https://sheets.googleapis.com/v4/spreadsheets",
@@ -8,4 +8,4 @@ const googleSheetsApiInstance = axios.create({
   },
 });
 
-export default googleSheetsApiInstance;
+module.exports = googleSheetsApiInstance;

@@ -1,4 +1,4 @@
-import axios from "axios";
+const axios = require("axios");
 
 const amoApiInstance = axios.create({
   baseURL: "https://kolenjii.amocrm.ru/api/v4",
@@ -9,4 +9,4 @@ const amoApiInstance = axios.create({
   },
 });
 
-export default amoApiInstance;
+module.exports = amoApiInstance;
