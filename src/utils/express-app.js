@@ -9,5 +9,5 @@ module.exports = async (app) => {
   app.use(express.json({ limit: "50mb", extended: true }));
   app.use(express.urlencoded({ limit: "50mb" }));
 
-  app.use("/amo", AmoRouter);
+  app.use("/pampadu/amo", AmoRouter);
 };
