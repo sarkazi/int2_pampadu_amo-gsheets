@@ -13,7 +13,11 @@ const {
 
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 const googleAuth = require("../../auth/google.auth.js");
-const getCurrentDateTime = require("../../utils/getCurrentDateTime.js");
+
+const {
+  timeDisplayVariantsEnum,
+  formatDateTimeUtil,
+} = require("../../utils/formatDateTimeUtil.js");
 
 const leadStatusesIdsEnum = {
   SUCCESS: 142,
@@ -41,6 +45,17 @@ const onCheckPresenceHeadingsInSheet = async ({ sheet }) => {
         headersArePresent: false,
       });
     }
+  });
+};
+
+const findTargetRowsInTable = ({ allRows, filterValue }) => {
+  return allRows.filter((row) => {
+    const headers = row._worksheet._headerValues;
+    const rows = row._rawData;
+
+    const leadIdHeaderIndex = headers.indexOf(GSHeadersEnum.LEAD_ID);
+
+    return rows[leadIdHeaderIndex] === filterValue;
   });
 };
 
@@ -72,6 +87,13 @@ const onHandlerToSuccessStatus = async ({
           break;
       }
     }
+
+    if (obj.hasOwnProperty("convertTime")) {
+      googleSheetsData[obj.name] = formatDateTimeUtil({
+        timestamp: +googleSheetsData[obj.name],
+        display: [timeDisplayVariantsEnum.DATE],
+      });
+    }
   });
 
   const targetSheet = googleSpreadSheet.sheetsByTitle[sheetsNameEnum.SUCCESS];
@@ -86,12 +108,19 @@ const onHandlerToSuccessStatus = async ({
     await targetSheet.setHeaderRow(headers);
   }
 
-  const rows = await targetSheet.getRows({
-    query: `${GSHeadersEnum.LEAD_ID} = ${leadId}`,
-  });
+  const rows = await targetSheet.getRows();
 
   if (!rows.length) {
     await targetSheet.addRow(googleSheetsData);
+  } else {
+    const targetRows = findTargetRowsInTable({
+      allRows: rows,
+      filterValue: leadId,
+    });
+
+    if (!targetRows.length) {
+      await targetSheet.addRow(googleSheetsData);
+    }
   }
 
   return;
@@ -125,6 +154,13 @@ const onHandlerToNoSuccessStatus = async ({
           break;
       }
     }
+
+    if (obj.hasOwnProperty("convertTime")) {
+      googleSheetsData[obj.name] = formatDateTimeUtil({
+        timestamp: +googleSheetsData[obj.name],
+        display: [timeDisplayVariantsEnum.DATE],
+      });
+    }
   });
 
   const targetSheet =
@@ -140,12 +176,19 @@ const onHandlerToNoSuccessStatus = async ({
     await targetSheet.setHeaderRow(headers);
   }
 
-  const rows = await targetSheet.getRows({
-    query: `${GSHeadersEnum.LEAD_ID} = ${leadId}`,
-  });
+  const rows = await targetSheet.getRows();
 
   if (!rows.length) {
     await targetSheet.addRow(googleSheetsData);
+  } else {
+    const targetRows = findTargetRowsInTable({
+      allRows: rows,
+      filterValue: leadId,
+    });
+
+    if (!targetRows.length) {
+      await targetSheet.addRow(googleSheetsData);
+    }
   }
 
   return;
@@ -179,6 +222,13 @@ const onHandlerToCollectInfoStatus = async ({
           break;
       }
     }
+
+    if (obj.hasOwnProperty("convertTime")) {
+      googleSheetsData[obj.name] = formatDateTimeUtil({
+        timestamp: +googleSheetsData[obj.name],
+        display: [timeDisplayVariantsEnum.DATE],
+      });
+    }
   });
 
   const targetSheet =
@@ -194,12 +244,19 @@ const onHandlerToCollectInfoStatus = async ({
     await targetSheet.setHeaderRow(headers);
   }
 
-  const rows = await targetSheet.getRows({
-    query: `${GSHeadersEnum.LEAD_ID} = ${leadId}`,
-  });
+  const rows = await targetSheet.getRows();
 
   if (!rows.length) {
     await targetSheet.addRow(googleSheetsData);
+  } else {
+    const targetRows = findTargetRowsInTable({
+      allRows: rows,
+      filterValue: leadId,
+    });
+
+    if (!targetRows.length) {
+      await targetSheet.addRow(googleSheetsData);
+    }
   }
 
   return;
@@ -229,13 +286,25 @@ const onHandlerToCallStatus = async ({
           ] = `https://${process.env.AMO_REFERER}/leads/detail/${leadId}`;
           break;
         case GSHeadersEnum.CALL_AT:
-          // googleSheetsData[obj.name] = Math.floor(new Date().getTime() / 1000);
-          googleSheetsData[obj.name] = getCurrentDateTime();
+          googleSheetsData[obj.name] = formatDateTimeUtil({
+            display: [
+              timeDisplayVariantsEnum.DATE,
+              timeDisplayVariantsEnum.TIME,
+              timeDisplayVariantsEnum.GMT,
+            ],
+          });
           break;
         default:
           googleSheetsData[obj.name] = "";
           break;
       }
+    }
+
+    if (obj.hasOwnProperty("convertTime")) {
+      googleSheetsData[obj.name] = formatDateTimeUtil({
+        timestamp: +googleSheetsData[obj.name],
+        display: [timeDisplayVariantsEnum.DATE],
+      });
     }
   });
 
@@ -251,15 +320,30 @@ const onHandlerToCallStatus = async ({
     await targetSheet.setHeaderRow(headers);
   }
 
-  const rows = await targetSheet.getRows({
-    query: `${GSHeadersEnum.LEAD_ID} = ${leadId}`,
-  });
+  const rows = await targetSheet.getRows();
 
   if (!rows.length) {
     await targetSheet.addRow(googleSheetsData);
   } else {
-    rows[0].assign({ [GSHeadersEnum.CALL_AT]: getCurrentDateTime() });
-    await rows[0].save();
+    const targetRows = findTargetRowsInTable({
+      allRows: rows,
+      filterValue: leadId,
+    });
+
+    if (!targetRows.length) {
+      await targetSheet.addRow(googleSheetsData);
+    } else {
+      targetRows[0].assign({
+        [GSHeadersEnum.CALL_AT]: formatDateTimeUtil({
+          display: [
+            timeDisplayVariantsEnum.DATE,
+            timeDisplayVariantsEnum.TIME,
+            timeDisplayVariantsEnum.GMT,
+          ],
+        }),
+      });
+      await targetRows[0].save();
+    }
   }
 
   return;

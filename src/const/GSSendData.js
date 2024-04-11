@@ -53,6 +53,7 @@ const successStageData = [
     customFieldId: 772071,
     label: "Год рождения",
     name: "godrojdenya",
+    convertTime: true,
   },
   {
     customFieldId: 772073,
@@ -93,6 +94,7 @@ const successStageData = [
     customFieldId: 772919,
     label: "Дата создания",
     name: "data_sozdanya",
+    convertTime: true,
   },
   {
     label: "Дата звонка",
@@ -102,6 +104,7 @@ const successStageData = [
     customFieldId: 772921,
     label: "Дата статуса",
     name: "data_statusa",
+    convertTime: true,
   },
   {
     customFieldId: 772925,
@@ -203,6 +206,7 @@ const noSuccessStageData = [
     customFieldId: 772071,
     label: "Год рождения",
     name: "godrojdenya",
+    convertTime: true,
   },
   {
     customFieldId: 772073,
@@ -245,11 +249,13 @@ const noSuccessStageData = [
     customFieldId: 772919,
     label: "Дата создания",
     name: "data_sozdanya",
+    convertTime: true,
   },
   {
     customFieldId: 772921,
     label: "Дата статуса",
     name: "data_statusa",
+    convertTime: true,
   },
   {
     customFieldId: 772925,
@@ -355,6 +361,7 @@ const callStageData = [
     customFieldId: 772071,
     label: "Год рождения",
     name: "godrojdenya",
+    convertTime: true,
   },
   {
     customFieldId: 772073,
@@ -395,6 +402,7 @@ const callStageData = [
     customFieldId: 772919,
     label: "Дата создания",
     name: "data_sozdanya",
+    convertTime: true,
   },
   {
     label: "Дата звонка",
@@ -404,6 +412,7 @@ const callStageData = [
     customFieldId: 772921,
     label: "Дата статуса",
     name: "data_statusa",
+    convertTime: true,
   },
   {
     customFieldId: 772925,
@@ -505,6 +514,7 @@ const collectInfoData = [
     customFieldId: 772071,
     label: "Год рождения",
     name: "godrojdenya",
+    convertTime: true,
   },
   {
     customFieldId: 772073,
@@ -545,11 +555,13 @@ const collectInfoData = [
     customFieldId: 772919,
     label: "Дата создания",
     name: "data_sozdanya",
+    convertTime: true,
   },
   {
     customFieldId: 772921,
     label: "Дата статуса",
     name: "data_statusa",
+    convertTime: true,
   },
   {
     customFieldId: 772925,
