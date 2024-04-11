@@ -324,6 +324,11 @@ const noSuccessStageData = [
     name: "id_link",
   },
   {
+    customFieldId: 774175,
+    label: "Причина отказа",
+    name: "Причина отказа",
+  },
+  {
     customFieldId: 774113,
     label: "ID куратора",
     name: "ID куратора",

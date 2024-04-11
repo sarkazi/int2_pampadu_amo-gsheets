@@ -11,6 +11,10 @@ const {
   onDefineValueForGS,
 } = require("../../utils/googleSheets/onDefineValueForGS.js");
 
+const { GoogleSpreadsheet } = require("google-spreadsheet");
+const googleAuth = require("../../auth/google.auth.js");
+const getCurrentDateTime = require("../../utils/getCurrentDateTime.js");
+
 const leadStatusesIdsEnum = {
   SUCCESS: 142,
   NO_SUCCESS: 143,
@@ -18,19 +22,247 @@ const leadStatusesIdsEnum = {
   CALL: 65914674,
 };
 
-const onDefineGoogleScriptsUrl = ({ statusId }) => {
-  switch (statusId) {
-    case leadStatusesIdsEnum.SUCCESS:
-      return process.env.GOOGLE_MACROS_SUCCESS_STAGE_LINK;
-    case leadStatusesIdsEnum.NO_SUCCESS:
-      return process.env.GOOGLE_MACROS_NO_SUCCESS_STAGE_LINK;
-    case leadStatusesIdsEnum.CALL:
-      return process.env.GOOGLE_MACROS_CALL_STAGE_LINK;
-    case leadStatusesIdsEnum.COLLECT_INFO:
-      return process.env.GOOGLE_MACROS_COLLECT_INFO_STAGE_LINK;
-    default:
-      return "";
+const sheetsNameEnum = {
+  SUCCESS: "Успешно",
+  NO_SUCCESS: "Неуспешные",
+  COLLECT_INFO: "Сбор инфы",
+  CALL: "Успешно",
+};
+
+const onCheckPresenceHeadingsInSheet = async ({ sheet }) => {
+  return await new Promise(async (resolve, _) => {
+    try {
+      await sheet.loadHeaderRow();
+      resolve({
+        headersArePresent: true,
+      });
+    } catch (err) {
+      resolve({
+        headersArePresent: false,
+      });
+    }
+  });
+};
+
+const onHandlerToSuccessStatus = async ({
+  googleSpreadSheet,
+  customFields,
+  leadId,
+}) => {
+  const googleSheetsData = {};
+
+  successStageData.map((obj) => {
+    if (obj.hasOwnProperty("customFieldId")) {
+      googleSheetsData[obj.name] = onDefineValueForGS({
+        customFields,
+        customFieldId: obj.customFieldId,
+      });
+    } else {
+      switch (obj.name) {
+        case GSHeadersEnum.LEAD_ID:
+          googleSheetsData[obj.name] = leadId;
+          break;
+        case GSHeadersEnum.LEAD_LINK:
+          googleSheetsData[
+            obj.name
+          ] = `https://${process.env.AMO_REFERER}/leads/detail/${leadId}`;
+          break;
+        default:
+          googleSheetsData[obj.name] = "";
+          break;
+      }
+    }
+  });
+
+  const targetSheet = googleSpreadSheet.sheetsByTitle[sheetsNameEnum.SUCCESS];
+
+  const { headersArePresent } = await onCheckPresenceHeadingsInSheet({
+    sheet: targetSheet,
+  });
+
+  if (!headersArePresent) {
+    const headers = Object.keys(googleSheetsData);
+
+    await targetSheet.setHeaderRow(headers);
   }
+
+  const rows = await targetSheet.getRows({
+    query: `${GSHeadersEnum.LEAD_ID} = ${leadId}`,
+  });
+
+  if (!rows.length) {
+    await targetSheet.addRow(googleSheetsData);
+  }
+
+  return;
+};
+
+const onHandlerToNoSuccessStatus = async ({
+  googleSpreadSheet,
+  customFields,
+  leadId,
+}) => {
+  const googleSheetsData = {};
+
+  noSuccessStageData.map((obj) => {
+    if (obj.hasOwnProperty("customFieldId")) {
+      googleSheetsData[obj.name] = onDefineValueForGS({
+        customFields,
+        customFieldId: obj.customFieldId,
+      });
+    } else {
+      switch (obj.name) {
+        case GSHeadersEnum.LEAD_ID:
+          googleSheetsData[obj.name] = leadId;
+          break;
+        case GSHeadersEnum.LEAD_LINK:
+          googleSheetsData[
+            obj.name
+          ] = `https://${process.env.AMO_REFERER}/leads/detail/${leadId}`;
+          break;
+        default:
+          googleSheetsData[obj.name] = "";
+          break;
+      }
+    }
+  });
+
+  const targetSheet =
+    googleSpreadSheet.sheetsByTitle[sheetsNameEnum.NO_SUCCESS];
+
+  const { headersArePresent } = await onCheckPresenceHeadingsInSheet({
+    sheet: targetSheet,
+  });
+
+  if (!headersArePresent) {
+    const headers = Object.keys(googleSheetsData);
+
+    await targetSheet.setHeaderRow(headers);
+  }
+
+  const rows = await targetSheet.getRows({
+    query: `${GSHeadersEnum.LEAD_ID} = ${leadId}`,
+  });
+
+  if (!rows.length) {
+    await targetSheet.addRow(googleSheetsData);
+  }
+
+  return;
+};
+
+const onHandlerToCollectInfoStatus = async ({
+  googleSpreadSheet,
+  customFields,
+  leadId,
+}) => {
+  const googleSheetsData = {};
+
+  collectInfoData.map((obj) => {
+    if (obj.hasOwnProperty("customFieldId")) {
+      googleSheetsData[obj.name] = onDefineValueForGS({
+        customFields,
+        customFieldId: obj.customFieldId,
+      });
+    } else {
+      switch (obj.name) {
+        case GSHeadersEnum.LEAD_ID:
+          googleSheetsData[obj.name] = leadId;
+          break;
+        case GSHeadersEnum.LEAD_LINK:
+          googleSheetsData[
+            obj.name
+          ] = `https://${process.env.AMO_REFERER}/leads/detail/${leadId}`;
+          break;
+        default:
+          googleSheetsData[obj.name] = "";
+          break;
+      }
+    }
+  });
+
+  const targetSheet =
+    googleSpreadSheet.sheetsByTitle[sheetsNameEnum.COLLECT_INFO];
+
+  const { headersArePresent } = await onCheckPresenceHeadingsInSheet({
+    sheet: targetSheet,
+  });
+
+  if (!headersArePresent) {
+    const headers = Object.keys(googleSheetsData);
+
+    await targetSheet.setHeaderRow(headers);
+  }
+
+  const rows = await targetSheet.getRows({
+    query: `${GSHeadersEnum.LEAD_ID} = ${leadId}`,
+  });
+
+  if (!rows.length) {
+    await targetSheet.addRow(googleSheetsData);
+  }
+
+  return;
+};
+
+const onHandlerToCallStatus = async ({
+  googleSpreadSheet,
+  customFields,
+  leadId,
+}) => {
+  const googleSheetsData = {};
+
+  callStageData.map((obj) => {
+    if (obj.hasOwnProperty("customFieldId")) {
+      googleSheetsData[obj.name] = onDefineValueForGS({
+        customFields,
+        customFieldId: obj.customFieldId,
+      });
+    } else {
+      switch (obj.name) {
+        case GSHeadersEnum.LEAD_ID:
+          googleSheetsData[obj.name] = leadId;
+          break;
+        case GSHeadersEnum.LEAD_LINK:
+          googleSheetsData[
+            obj.name
+          ] = `https://${process.env.AMO_REFERER}/leads/detail/${leadId}`;
+          break;
+        case GSHeadersEnum.CALL_AT:
+          // googleSheetsData[obj.name] = Math.floor(new Date().getTime() / 1000);
+          googleSheetsData[obj.name] = getCurrentDateTime();
+          break;
+        default:
+          googleSheetsData[obj.name] = "";
+          break;
+      }
+    }
+  });
+
+  const targetSheet = googleSpreadSheet.sheetsByTitle[sheetsNameEnum.CALL];
+
+  const { headersArePresent } = await onCheckPresenceHeadingsInSheet({
+    sheet: targetSheet,
+  });
+
+  if (!headersArePresent) {
+    const headers = Object.keys(googleSheetsData);
+
+    await targetSheet.setHeaderRow(headers);
+  }
+
+  const rows = await targetSheet.getRows({
+    query: `${GSHeadersEnum.LEAD_ID} = ${leadId}`,
+  });
+
+  if (!rows.length) {
+    await targetSheet.addRow(googleSheetsData);
+  } else {
+    rows[0].assign({ [GSHeadersEnum.CALL_AT]: getCurrentDateTime() });
+    await rows[0].save();
+  }
+
+  return;
 };
 
 module.exports = async (req, res, next) => {
@@ -49,108 +281,40 @@ module.exports = async (req, res, next) => {
       ? leadResponse.custom_fields_values
       : [];
 
-    const googleSheetsData = {};
+    const googleSpreadSheet = new GoogleSpreadsheet(
+      process.env.GOOGLE_SPREADSHEET_ID,
+      googleAuth
+    );
+
+    await googleSpreadSheet.loadInfo();
 
     switch (statusId) {
       case leadStatusesIdsEnum.SUCCESS:
-        successStageData.map((obj) => {
-          if (obj.hasOwnProperty("customFieldId")) {
-            googleSheetsData[obj.name] = onDefineValueForGS({
-              customFields,
-              customFieldId: obj.customFieldId,
-            });
-          } else {
-            switch (obj.name) {
-              case GSHeadersEnum.LEAD_ID:
-                googleSheetsData[obj.name] = leadId;
-                break;
-              case GSHeadersEnum.LEAD_LINK:
-                googleSheetsData[
-                  obj.name
-                ] = `https://${process.env.AMO_REFERER}/leads/detail/${leadId}`;
-                break;
-              default:
-                googleSheetsData[obj.name] = "";
-                break;
-            }
-          }
+        await onHandlerToSuccessStatus({
+          leadId,
+          googleSpreadSheet,
+          customFields,
         });
         break;
       case leadStatusesIdsEnum.NO_SUCCESS:
-        noSuccessStageData.map((obj) => {
-          if (obj.hasOwnProperty("customFieldId")) {
-            googleSheetsData[obj.name] = onDefineValueForGS({
-              customFields,
-              customFieldId: obj.customFieldId,
-            });
-          } else {
-            switch (obj.name) {
-              case GSHeadersEnum.LEAD_ID:
-                googleSheetsData[obj.name] = leadId;
-                break;
-              case GSHeadersEnum.LEAD_LINK:
-                googleSheetsData[
-                  obj.name
-                ] = `https://${process.env.AMO_REFERER}/leads/detail/${leadId}`;
-                break;
-              default:
-                googleSheetsData[obj.name] = "";
-                break;
-            }
-          }
+        await onHandlerToNoSuccessStatus({
+          leadId,
+          googleSpreadSheet,
+          customFields,
         });
         break;
       case leadStatusesIdsEnum.COLLECT_INFO:
-        collectInfoData.map((obj) => {
-          if (obj.hasOwnProperty("customFieldId")) {
-            googleSheetsData[obj.name] = onDefineValueForGS({
-              customFields,
-              customFieldId: obj.customFieldId,
-            });
-          } else {
-            switch (obj.name) {
-              case GSHeadersEnum.LEAD_ID:
-                googleSheetsData[obj.name] = leadId;
-                break;
-              case GSHeadersEnum.LEAD_LINK:
-                googleSheetsData[
-                  obj.name
-                ] = `https://${process.env.AMO_REFERER}/leads/detail/${leadId}`;
-                break;
-              default:
-                googleSheetsData[obj.name] = "";
-                break;
-            }
-          }
+        await onHandlerToCollectInfoStatus({
+          leadId,
+          googleSpreadSheet,
+          customFields,
         });
         break;
       case leadStatusesIdsEnum.CALL:
-        callStageData.map((obj) => {
-          if (obj.hasOwnProperty("customFieldId")) {
-            googleSheetsData[obj.name] = onDefineValueForGS({
-              customFields,
-              customFieldId: obj.customFieldId,
-            });
-          } else {
-            switch (obj.name) {
-              case GSHeadersEnum.LEAD_ID:
-                googleSheetsData[obj.name] = leadId;
-                break;
-              case GSHeadersEnum.LEAD_LINK:
-                googleSheetsData[
-                  obj.name
-                ] = `https://${process.env.AMO_REFERER}/leads/detail/${leadId}`;
-                break;
-              case GSHeadersEnum.CALL_AT:
-                googleSheetsData[obj.name] = Math.floor(
-                  new Date().getTime() / 1000
-                );
-                break;
-              default:
-                googleSheetsData[obj.name] = "";
-                break;
-            }
-          }
+        await onHandlerToCallStatus({
+          leadId,
+          googleSpreadSheet,
+          customFields,
         });
         break;
       default:
@@ -158,15 +322,6 @@ module.exports = async (req, res, next) => {
           status: "success",
         });
     }
-
-    const googleScriptsUrl = onDefineGoogleScriptsUrl({ statusId });
-
-    const { data: googleScriptResponse } = await axios.post(
-      googleScriptsUrl,
-      googleSheetsData
-    );
-
-    console.log(googleScriptResponse);
 
     return res.status(200).json({
       status: "success",
