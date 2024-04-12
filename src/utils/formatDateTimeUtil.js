@@ -7,7 +7,9 @@ const timeDisplayVariantsEnum = {
 const formatDateTimeUtil = ({ display, timestamp }) => {
   const date = timestamp ? new Date(timestamp * 1000) : new Date();
 
-  const options = {};
+  const options = {
+    timeZone: "Europe/Moscow",
+  };
 
   if (display.includes(timeDisplayVariantsEnum.DATE)) {
     options.year = "numeric";

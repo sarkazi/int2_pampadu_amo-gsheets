@@ -93,7 +93,6 @@ const onHandlerToSuccessStatus = async ({
             display: [
               timeDisplayVariantsEnum.DATE,
               timeDisplayVariantsEnum.TIME,
-              timeDisplayVariantsEnum.GMT,
             ],
             timestamp: created_at,
           });
@@ -310,7 +309,6 @@ const onHandlerToCallStatus = async ({
             display: [
               timeDisplayVariantsEnum.DATE,
               timeDisplayVariantsEnum.TIME,
-              timeDisplayVariantsEnum.GMT,
             ],
           });
           break;
@@ -319,7 +317,6 @@ const onHandlerToCallStatus = async ({
             display: [
               timeDisplayVariantsEnum.DATE,
               timeDisplayVariantsEnum.TIME,
-              timeDisplayVariantsEnum.GMT,
             ],
             timestamp: created_at,
           });
@@ -365,11 +362,7 @@ const onHandlerToCallStatus = async ({
     } else {
       targetRows[0].assign({
         [GSHeadersEnum.CALL_AT]: formatDateTimeUtil({
-          display: [
-            timeDisplayVariantsEnum.DATE,
-            timeDisplayVariantsEnum.TIME,
-            timeDisplayVariantsEnum.GMT,
-          ],
+          display: [timeDisplayVariantsEnum.DATE, timeDisplayVariantsEnum.TIME],
         }),
       });
       await targetRows[0].save();
