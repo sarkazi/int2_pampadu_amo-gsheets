@@ -97,6 +97,10 @@ const successStageData = [
     convertTime: true,
   },
   {
+    label: "Дата создания сделки",
+    name: "Дата создания сделки",
+  },
+  {
     label: "Дата звонка",
     name: "data_zvonka",
   },
@@ -403,6 +407,10 @@ const callStageData = [
     label: "Дата создания",
     name: "data_sozdanya",
     convertTime: true,
+  },
+  {
+    label: "Дата создания сделки",
+    name: "Дата создания сделки",
   },
   {
     label: "Дата звонка",

@@ -66,8 +66,10 @@ const findTargetRowsInTable = ({ allRows, filterValue }) => {
 const onHandlerToSuccessStatus = async ({
   googleSpreadSheet,
   customFields,
-  leadId,
+  leadData,
 }) => {
+  const { id, created_at } = leadData;
+
   const googleSheetsData = {};
 
   successStageData.map((obj) => {
@@ -79,12 +81,22 @@ const onHandlerToSuccessStatus = async ({
     } else {
       switch (obj.name) {
         case GSHeadersEnum.LEAD_ID:
-          googleSheetsData[obj.name] = leadId;
+          googleSheetsData[obj.name] = id;
           break;
         case GSHeadersEnum.LEAD_LINK:
           googleSheetsData[
             obj.name
-          ] = `https://${process.env.AMO_REFERER}/leads/detail/${leadId}`;
+          ] = `https://${process.env.AMO_REFERER}/leads/detail/${id}`;
+          break;
+        case GSHeadersEnum.CREATED_AT_LEAD:
+          googleSheetsData[obj.name] = formatDateTimeUtil({
+            display: [
+              timeDisplayVariantsEnum.DATE,
+              timeDisplayVariantsEnum.TIME,
+              timeDisplayVariantsEnum.GMT,
+            ],
+            timestamp: created_at,
+          });
           break;
         default:
           googleSheetsData[obj.name] = "";
@@ -135,6 +147,8 @@ const onHandlerToNoSuccessStatus = async ({
   customFields,
   leadId,
 }) => {
+  const { id } = leadData;
+
   const googleSheetsData = {};
 
   noSuccessStageData.map((obj) => {
@@ -146,12 +160,12 @@ const onHandlerToNoSuccessStatus = async ({
     } else {
       switch (obj.name) {
         case GSHeadersEnum.LEAD_ID:
-          googleSheetsData[obj.name] = leadId;
+          googleSheetsData[obj.name] = id;
           break;
         case GSHeadersEnum.LEAD_LINK:
           googleSheetsData[
             obj.name
-          ] = `https://${process.env.AMO_REFERER}/leads/detail/${leadId}`;
+          ] = `https://${process.env.AMO_REFERER}/leads/detail/${id}`;
           break;
         default:
           googleSheetsData[obj.name] = "";
@@ -200,8 +214,10 @@ const onHandlerToNoSuccessStatus = async ({
 const onHandlerToCollectInfoStatus = async ({
   googleSpreadSheet,
   customFields,
-  leadId,
+  leadData,
 }) => {
+  const { id } = leadData;
+
   const googleSheetsData = {};
 
   collectInfoData.map((obj) => {
@@ -213,12 +229,12 @@ const onHandlerToCollectInfoStatus = async ({
     } else {
       switch (obj.name) {
         case GSHeadersEnum.LEAD_ID:
-          googleSheetsData[obj.name] = leadId;
+          googleSheetsData[obj.name] = id;
           break;
         case GSHeadersEnum.LEAD_LINK:
           googleSheetsData[
             obj.name
-          ] = `https://${process.env.AMO_REFERER}/leads/detail/${leadId}`;
+          ] = `https://${process.env.AMO_REFERER}/leads/detail/${id}`;
           break;
         default:
           googleSheetsData[obj.name] = "";
@@ -267,8 +283,10 @@ const onHandlerToCollectInfoStatus = async ({
 const onHandlerToCallStatus = async ({
   googleSpreadSheet,
   customFields,
-  leadId,
+  leadData,
 }) => {
+  const { id, created_at } = leadData;
+
   const googleSheetsData = {};
 
   callStageData.map((obj) => {
@@ -280,12 +298,12 @@ const onHandlerToCallStatus = async ({
     } else {
       switch (obj.name) {
         case GSHeadersEnum.LEAD_ID:
-          googleSheetsData[obj.name] = leadId;
+          googleSheetsData[obj.name] = id;
           break;
         case GSHeadersEnum.LEAD_LINK:
           googleSheetsData[
             obj.name
-          ] = `https://${process.env.AMO_REFERER}/leads/detail/${leadId}`;
+          ] = `https://${process.env.AMO_REFERER}/leads/detail/${id}`;
           break;
         case GSHeadersEnum.CALL_AT:
           googleSheetsData[obj.name] = formatDateTimeUtil({
@@ -294,6 +312,16 @@ const onHandlerToCallStatus = async ({
               timeDisplayVariantsEnum.TIME,
               timeDisplayVariantsEnum.GMT,
             ],
+          });
+          break;
+        case GSHeadersEnum.CREATED_AT_LEAD:
+          googleSheetsData[obj.name] = formatDateTimeUtil({
+            display: [
+              timeDisplayVariantsEnum.DATE,
+              timeDisplayVariantsEnum.TIME,
+              timeDisplayVariantsEnum.GMT,
+            ],
+            timestamp: created_at,
           });
           break;
         default:

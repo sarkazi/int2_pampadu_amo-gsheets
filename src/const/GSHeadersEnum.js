@@ -11,6 +11,7 @@ module.exports = {
   CHANEL: "chanel",
   RESPONSIBLE_EMPLOYEE: "otvet_sotrudnik",
   CREATED_AT: "data_sozdanya",
+  CREATED_AT_LEAD: "Дата создания сделки",
   CALL_AT: "data_zvonka",
   STATUS_AT: "data_statusa",
   FULL_NAME_CLIENT: "fio_client",
