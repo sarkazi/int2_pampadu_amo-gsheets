@@ -30,7 +30,11 @@ const sheetsNameEnum = {
   SUCCESS: "Успешно",
   NO_SUCCESS: "Неуспешные",
   COLLECT_INFO: "Сбор инфы",
-  CALL: "Успешно",
+};
+const sheetsIdsEnum = {
+  SUCCESS: 488030001,
+  NO_SUCCESS: 244560428,
+  COLLECT_INFO: 61580715,
 };
 
 const onCheckPresenceHeadingsInSheet = async ({ sheet }) => {
@@ -96,7 +100,7 @@ const onHandlerToSuccessStatus = async ({
     }
   });
 
-  const targetSheet = googleSpreadSheet.sheetsByTitle[sheetsNameEnum.SUCCESS];
+  const targetSheet = googleSpreadSheet.sheetsById[sheetsIdsEnum.SUCCESS];
 
   const { headersArePresent } = await onCheckPresenceHeadingsInSheet({
     sheet: targetSheet,
@@ -163,8 +167,7 @@ const onHandlerToNoSuccessStatus = async ({
     }
   });
 
-  const targetSheet =
-    googleSpreadSheet.sheetsByTitle[sheetsNameEnum.NO_SUCCESS];
+  const targetSheet = googleSpreadSheet.sheetsById[sheetsIdsEnum.NO_SUCCESS];
 
   const { headersArePresent } = await onCheckPresenceHeadingsInSheet({
     sheet: targetSheet,
@@ -231,8 +234,7 @@ const onHandlerToCollectInfoStatus = async ({
     }
   });
 
-  const targetSheet =
-    googleSpreadSheet.sheetsByTitle[sheetsNameEnum.COLLECT_INFO];
+  const targetSheet = googleSpreadSheet.sheetsById[sheetsIdsEnum.COLLECT_INFO];
 
   const { headersArePresent } = await onCheckPresenceHeadingsInSheet({
     sheet: targetSheet,
@@ -308,7 +310,7 @@ const onHandlerToCallStatus = async ({
     }
   });
 
-  const targetSheet = googleSpreadSheet.sheetsByTitle[sheetsNameEnum.CALL];
+  const targetSheet = googleSpreadSheet.sheetsById[sheetsIdsEnum.SUCCESS];
 
   const { headersArePresent } = await onCheckPresenceHeadingsInSheet({
     sheet: targetSheet,
