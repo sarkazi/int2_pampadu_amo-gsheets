@@ -405,28 +405,28 @@ module.exports = async (req, res, next) => {
     switch (statusId) {
       case leadStatusesIdsEnum.SUCCESS:
         await onHandlerToSuccessStatus({
-          leadId,
+          leadData: leadResponse,
           googleSpreadSheet,
           customFields,
         });
         break;
       case leadStatusesIdsEnum.NO_SUCCESS:
         await onHandlerToNoSuccessStatus({
-          leadId,
+          leadData: leadResponse,
           googleSpreadSheet,
           customFields,
         });
         break;
       case leadStatusesIdsEnum.COLLECT_INFO:
         await onHandlerToCollectInfoStatus({
-          leadId,
+          leadData: leadResponse,
           googleSpreadSheet,
           customFields,
         });
         break;
       case leadStatusesIdsEnum.CALL:
         await onHandlerToCallStatus({
-          leadId,
+          leadData: leadResponse,
           googleSpreadSheet,
           customFields,
         });
