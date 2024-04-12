@@ -59,7 +59,7 @@ const findTargetRowsInTable = ({ allRows, filterValue }) => {
 
     const leadIdHeaderIndex = headers.indexOf(GSHeadersEnum.LEAD_ID);
 
-    return rows[leadIdHeaderIndex] === filterValue;
+    return rows[leadIdHeaderIndex] == filterValue;
   });
 };
 
@@ -130,7 +130,7 @@ const onHandlerToSuccessStatus = async ({
   } else {
     const targetRows = findTargetRowsInTable({
       allRows: rows,
-      filterValue: leadId,
+      filterValue: id,
     });
 
     if (!targetRows.length) {
@@ -144,7 +144,7 @@ const onHandlerToSuccessStatus = async ({
 const onHandlerToNoSuccessStatus = async ({
   googleSpreadSheet,
   customFields,
-  leadId,
+  leadData,
 }) => {
   const { id } = leadData;
 
@@ -199,7 +199,7 @@ const onHandlerToNoSuccessStatus = async ({
   } else {
     const targetRows = findTargetRowsInTable({
       allRows: rows,
-      filterValue: leadId,
+      filterValue: id,
     });
 
     if (!targetRows.length) {
@@ -268,7 +268,7 @@ const onHandlerToCollectInfoStatus = async ({
   } else {
     const targetRows = findTargetRowsInTable({
       allRows: rows,
-      filterValue: leadId,
+      filterValue: id,
     });
 
     if (!targetRows.length) {
@@ -285,6 +285,8 @@ const onHandlerToCallStatus = async ({
   leadData,
 }) => {
   const { id, created_at } = leadData;
+
+  console.log(id);
 
   const googleSheetsData = {};
 
@@ -354,7 +356,7 @@ const onHandlerToCallStatus = async ({
   } else {
     const targetRows = findTargetRowsInTable({
       allRows: rows,
-      filterValue: leadId,
+      filterValue: id,
     });
 
     if (!targetRows.length) {
