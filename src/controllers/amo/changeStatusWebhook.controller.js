@@ -1,4 +1,3 @@
-const axios = require("axios");
 const {
   collectInfoData,
   callStageData,
@@ -26,15 +25,11 @@ const leadStatusesIdsEnum = {
   CALL: 65914674,
 };
 
-const sheetsNameEnum = {
-  SUCCESS: "Успешно",
-  NO_SUCCESS: "Неуспешные",
-  COLLECT_INFO: "Сбор инфы",
-};
 const sheetsIdsEnum = {
   SUCCESS: 488030001,
   NO_SUCCESS: 244560428,
   COLLECT_INFO: 61580715,
+  CALL: 333399471,
 };
 
 const onCheckPresenceHeadingsInSheet = async ({ sheet }) => {
@@ -286,8 +281,6 @@ const onHandlerToCallStatus = async ({
 }) => {
   const { id, created_at } = leadData;
 
-  console.log(id);
-
   const googleSheetsData = {};
 
   callStageData.map((obj) => {
@@ -337,7 +330,7 @@ const onHandlerToCallStatus = async ({
     }
   });
 
-  const targetSheet = googleSpreadSheet.sheetsById[sheetsIdsEnum.SUCCESS];
+  const targetSheet = googleSpreadSheet.sheetsById[sheetsIdsEnum.CALL];
 
   const { headersArePresent } = await onCheckPresenceHeadingsInSheet({
     sheet: targetSheet,
@@ -361,13 +354,6 @@ const onHandlerToCallStatus = async ({
 
     if (!targetRows.length) {
       await targetSheet.addRow(googleSheetsData);
-    } else {
-      targetRows[0].assign({
-        [GSHeadersEnum.CALL_AT]: formatDateTimeUtil({
-          display: [timeDisplayVariantsEnum.DATE, timeDisplayVariantsEnum.TIME],
-        }),
-      });
-      await targetRows[0].save();
     }
   }
 
@@ -442,3 +428,23 @@ module.exports = async (req, res, next) => {
     });
   }
 };
+
+// if (!rows.length) {
+//   await targetSheet.addRow(googleSheetsData);
+// } else {
+//   const targetRows = findTargetRowsInTable({
+//     allRows: rows,
+//     filterValue: id,
+//   });
+
+//   if (!targetRows.length) {
+//     await targetSheet.addRow(googleSheetsData);
+//   } else {
+//     targetRows[0].assign({
+//       [GSHeadersEnum.CALL_AT]: formatDateTimeUtil({
+//         display: [timeDisplayVariantsEnum.DATE, timeDisplayVariantsEnum.TIME],
+//       }),
+//     });
+//     await targetRows[0].save();
+//   }
+// }

@@ -101,10 +101,6 @@ const successStageData = [
     name: "Дата создания сделки",
   },
   {
-    label: "Дата звонка",
-    name: "data_zvonka",
-  },
-  {
     customFieldId: 772921,
     label: "Дата статуса",
     name: "data_statusa",
