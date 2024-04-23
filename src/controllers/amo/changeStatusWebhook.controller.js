@@ -62,6 +62,7 @@ const onHandlerToSuccessStatus = async ({
   googleSpreadSheet,
   customFields,
   leadData,
+  responsibleUser,
 }) => {
   const { id, created_at } = leadData;
 
@@ -82,6 +83,9 @@ const onHandlerToSuccessStatus = async ({
           googleSheetsData[
             obj.name
           ] = `https://${process.env.AMO_REFERER}/leads/detail/${id}`;
+          break;
+        case GSHeadersEnum.RESPONSIBLE_EMPLOYEE:
+          googleSheetsData[obj.name] = responsibleUser;
           break;
         case GSHeadersEnum.CREATED_AT_LEAD:
           googleSheetsData[obj.name] = formatDateTimeUtil({
@@ -140,6 +144,7 @@ const onHandlerToNoSuccessStatus = async ({
   googleSpreadSheet,
   customFields,
   leadData,
+  responsibleUser,
 }) => {
   const { id } = leadData;
 
@@ -160,6 +165,9 @@ const onHandlerToNoSuccessStatus = async ({
           googleSheetsData[
             obj.name
           ] = `https://${process.env.AMO_REFERER}/leads/detail/${id}`;
+          break;
+        case GSHeadersEnum.RESPONSIBLE_EMPLOYEE:
+          googleSheetsData[obj.name] = responsibleUser;
           break;
         default:
           googleSheetsData[obj.name] = "";
@@ -209,6 +217,7 @@ const onHandlerToCollectInfoStatus = async ({
   googleSpreadSheet,
   customFields,
   leadData,
+  responsibleUser,
 }) => {
   const { id } = leadData;
 
@@ -229,6 +238,9 @@ const onHandlerToCollectInfoStatus = async ({
           googleSheetsData[
             obj.name
           ] = `https://${process.env.AMO_REFERER}/leads/detail/${id}`;
+          break;
+        case GSHeadersEnum.RESPONSIBLE_EMPLOYEE:
+          googleSheetsData[obj.name] = responsibleUser;
           break;
         default:
           googleSheetsData[obj.name] = "";
@@ -278,6 +290,7 @@ const onHandlerToCallStatus = async ({
   googleSpreadSheet,
   customFields,
   leadData,
+  responsibleUser,
 }) => {
   const { id, created_at } = leadData;
 
@@ -298,6 +311,9 @@ const onHandlerToCallStatus = async ({
           googleSheetsData[
             obj.name
           ] = `https://${process.env.AMO_REFERER}/leads/detail/${id}`;
+          break;
+        case GSHeadersEnum.RESPONSIBLE_EMPLOYEE:
+          googleSheetsData[obj.name] = responsibleUser;
           break;
         case GSHeadersEnum.CALL_AT:
           googleSheetsData[obj.name] = formatDateTimeUtil({
@@ -372,6 +388,10 @@ module.exports = async (req, res, next) => {
 
     const { data: leadResponse } = await amoApiInstance.get(`/leads/${leadId}`);
 
+    const { data: userResponse } = await amoApiInstance.get(
+      `/users/${leadResponse.responsible_user_id}`
+    );
+
     const customFields = leadResponse.custom_fields_values
       ? leadResponse.custom_fields_values
       : [];
@@ -389,6 +409,7 @@ module.exports = async (req, res, next) => {
           leadData: leadResponse,
           googleSpreadSheet,
           customFields,
+          responsibleUser: userResponse.name,
         });
         break;
       case leadStatusesIdsEnum.NO_SUCCESS:
@@ -396,6 +417,7 @@ module.exports = async (req, res, next) => {
           leadData: leadResponse,
           googleSpreadSheet,
           customFields,
+          responsibleUser: userResponse.name,
         });
         break;
       case leadStatusesIdsEnum.COLLECT_INFO:
@@ -403,6 +425,7 @@ module.exports = async (req, res, next) => {
           leadData: leadResponse,
           googleSpreadSheet,
           customFields,
+          responsibleUser: userResponse.name,
         });
         break;
       case leadStatusesIdsEnum.CALL:
@@ -410,6 +433,7 @@ module.exports = async (req, res, next) => {
           leadData: leadResponse,
           googleSpreadSheet,
           customFields,
+          responsibleUser: userResponse.name,
         });
         break;
       default:

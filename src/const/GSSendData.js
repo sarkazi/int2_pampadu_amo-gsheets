@@ -86,7 +86,6 @@ const successStageData = [
     name: "chanel",
   },
   {
-    customFieldId: 772931,
     label: "Ответственный сотрудник",
     name: "otvet_sotrudnik",
   },
@@ -241,7 +240,6 @@ const noSuccessStageData = [
   },
   // --
   {
-    customFieldId: 772931,
     label: "Ответственный сотрудник",
     name: "otvet_sotrudnik",
   },
@@ -394,7 +392,6 @@ const callStageData = [
     name: "chanel",
   },
   {
-    customFieldId: 772931,
     label: "Ответственный сотрудник",
     name: "otvet_sotrudnik",
   },
@@ -551,7 +548,6 @@ const collectInfoData = [
     name: "chanel",
   },
   {
-    customFieldId: 772931,
     label: "Ответственный сотрудник",
     name: "otvet_sotrudnik",
   },
