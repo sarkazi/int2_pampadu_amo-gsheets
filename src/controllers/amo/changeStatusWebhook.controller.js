@@ -22,6 +22,7 @@ const leadStatusesIdsEnum = {
   SUCCESS: 142,
   NO_SUCCESS: 143,
   COLLECT_INFO: 60679026,
+  NEED_TO_CONTACT: 66250790,
   CALL: 65914674,
 };
 
@@ -421,6 +422,14 @@ module.exports = async (req, res, next) => {
         });
         break;
       case leadStatusesIdsEnum.COLLECT_INFO:
+        await onHandlerToCollectInfoStatus({
+          leadData: leadResponse,
+          googleSpreadSheet,
+          customFields,
+          responsibleUser: userResponse.name,
+        });
+        break;
+      case leadStatusesIdsEnum.NEED_TO_CONTACT:
         await onHandlerToCollectInfoStatus({
           leadData: leadResponse,
           googleSpreadSheet,
