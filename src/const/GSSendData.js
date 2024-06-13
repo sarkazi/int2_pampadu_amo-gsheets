@@ -183,6 +183,11 @@ const successStageData = [
     label: "Ссылка на сделку",
     name: "id_link",
   },
+  {
+    customFieldId: 774937,
+    label: "nps",
+    name: "nps",
+  },
 ];
 
 const noSuccessStageData = [
@@ -326,6 +331,11 @@ const noSuccessStageData = [
   {
     label: "Ссылка на сделку",
     name: "id_link",
+  },
+  {
+    customFieldId: 774937,
+    label: "nps",
+    name: "nps",
   },
   {
     customFieldId: 774175,

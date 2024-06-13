@@ -127,14 +127,20 @@ const onHandlerToSuccessStatus = async ({
 
   if (!rows.length) {
     await targetSheet.addRow(googleSheetsData);
+
+    console.log(`Первая заявка ${id} добавлена на лист ${targetSheet.title}`);
   } else {
     const targetRows = findTargetRowsInTable({
       allRows: rows,
       filterValue: id,
     });
 
+    console.log(`Существующая запись: ${targetRows.length}`, `leadId: ${id}`);
+
     if (!targetRows.length) {
       await targetSheet.addRow(googleSheetsData);
+
+      console.log(`Заявка ${id} добавлена на лист ${targetSheet.title}`);
     }
   }
 
@@ -200,14 +206,20 @@ const onHandlerToNoSuccessStatus = async ({
 
   if (!rows.length) {
     await targetSheet.addRow(googleSheetsData);
+
+    console.log(`Первая заявка ${id} добавлена на лист ${targetSheet.title}`);
   } else {
     const targetRows = findTargetRowsInTable({
       allRows: rows,
       filterValue: id,
     });
 
+    console.log(`Существующая запись: ${targetRows.length}`, `leadId: ${id}`);
+
     if (!targetRows.length) {
       await targetSheet.addRow(googleSheetsData);
+
+      console.log(`Заявка ${id} добавлена на лист ${targetSheet.title}`);
     }
   }
 
@@ -273,14 +285,20 @@ const onHandlerToCollectInfoStatus = async ({
 
   if (!rows.length) {
     await targetSheet.addRow(googleSheetsData);
+
+    console.log(`Первая заявка ${id} добавлена на лист ${targetSheet.title}`);
   } else {
     const targetRows = findTargetRowsInTable({
       allRows: rows,
       filterValue: id,
     });
 
+    console.log(`Существующая запись: ${targetRows.length}`, `leadId: ${id}`);
+
     if (!targetRows.length) {
       await targetSheet.addRow(googleSheetsData);
+
+      console.log(`Заявка ${id} добавлена на лист ${targetSheet.title}`);
     }
   }
 
@@ -363,14 +381,20 @@ const onHandlerToCallStatus = async ({
 
   if (!rows.length) {
     await targetSheet.addRow(googleSheetsData);
+
+    console.log(`Первая заявка ${id} добавлена на лист ${targetSheet.title}`);
   } else {
     const targetRows = findTargetRowsInTable({
       allRows: rows,
       filterValue: id,
     });
 
+    console.log(`Существующая запись: ${targetRows.length}`, `leadId: ${id}`);
+
     if (!targetRows.length) {
       await targetSheet.addRow(googleSheetsData);
+
+      console.log(`Заявка ${id} добавлена на лист ${targetSheet.title}`);
     }
   }
 
